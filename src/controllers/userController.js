@@ -12,24 +12,19 @@ const isValidRequestBody = function (requestBody) {
 }
 
 
-const createUserData = async function (req, res) {  
+const createUserData = async function (req, res) {
     try {
         let data = req.body
-        if (!isValidRequestBody(data))
-        return res.status(400).send({ status: false, msg:"Please Enter some data"})
-        if(!isValid(data.title) ){
-            return res.status(400).send( { status:false, msg: "Title is Required"  } )
-        }
-        let Mr = data.title.enum
-        let Miss = data.title.enum
-        let Mrs = data.title.enum
+        const { title, name, phone, email, password, address } = data
 
-        if(data.title  ( Mr || Miss || Mrs)){
-            return res.status(400).send( {  status: false, msg:"Please enter valid Title"} )
+        if (!isValidRequestBody(data))
+            return res.status(400).send({ status: false, msg: "Please Enter some data" })
+        if (!isValid(data.title)) {
+            return res.status(400).send({ status: false, msg: "Title is Required" })
         }
         
-        if(!isValid(data.name) ){
-            return res.status(400).send( { status:false, msg: "Name is Required"  } )
+        if (!isValid(data.name)) {
+            return res.status(400).send({ status: false, msg: "Name is Required" })
         }
         if (isValid(data.phone))
 
@@ -41,20 +36,26 @@ const createUserData = async function (req, res) {
         if (alreadyExsit) {
             return res.status(400).send({ status: false, msg: "phone already exit" })
         }
-        
+
         if (isValid(data.email))
-         if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(data.email)))
+            if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(data.email)))
                 return res.status(400).send({ status: false, msg: "is not a valid email" })
         if (!isValid(data.email))
             return res.status(400).send({ status: false, msg: "email is required" })
 
+        // let Lowercase = email.toLowerCase()
+        // const filterUser = await UserModel.findOne({ email: Lowercase })
+        // if (!filterUser) {
+        //     return res.status(400).send({ status: false, msg: "no email found" })
+
+        //}
         let alreadyExistEmail = await UserModel.findOne({ email: data.email })
         if (alreadyExistEmail) {
             return res.status(400).send({ status: false, msg: "email already exit" })
         }
 
-        if (!isValid(data.password) ){
-            return res.status(400).send( { status:false, msg: "Password is Required"  } )
+        if (!isValid(data.password)) {
+            return res.status(400).send({ status: false, msg: "Password is Required" })
         }
         if (!(/^[a-zA-Z0-9!@#$%^&*]{8,15}$/.test(data.password))) {
             return res.status(400).send({ status: false, msg: "please provide valid password with one uppercase letter ,one lowercase, one character and one number " })
@@ -63,8 +64,8 @@ const createUserData = async function (req, res) {
 
             if (!(/^([+]\d{2})?\d{6}$/.test(data.address.pincode)))
                 return res.status(400).send({ status: false, msg: "Please Enter  a Valid pincode Number" })
-        
-    
+
+
         let savedData = await UserModel.create(data)
         res.status(201).send({ msg: savedData })
 
