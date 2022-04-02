@@ -13,7 +13,7 @@ router.post("/books" ,bookController.createBook)
 router.get("/books",bookController.getBook)
 router.get("/books/:bookId",middleware.authenticate,bookController.getBookById)
 
-router.put("/PUT/books/:bookId",middleware.authenticate,bookController.updateBooks)
+router.put("/books/:bookId",middleware.authenticate,bookController.updateBooks)
 router.delete("/books/:bookId",middleware.authenticate,bookController.deleteById)
 //review
 router.post( "/books/:bookId/review",reviewController.createReview)
