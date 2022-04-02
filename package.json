@@ -4,6 +4,7 @@
     "express": "^4.17.3",
     "init": "^0.1.2",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
     "mongoose": "^6.2.8",
     "mongoose-type-email": "^1.1.2",
     "nodemon": "^2.0.15"

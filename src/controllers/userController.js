@@ -5,23 +5,36 @@ const isValid = function (value) {
     if (typeof value == undefined || value == null || value.length == 0) return false
     if (typeof value === 'string' && value.trim().length === 0) return false
     return true
-
 }
+
+
+
 const isValidRequestBody = function (requestBody) {
     return Object.keys(requestBody).length > 0
 }
+
+
 
 
 const createUserData = async function (req, res) {
     try {
         let data = req.body
         const { title, name, phone, email, password, address } = data
+    
+
 
         if (!isValidRequestBody(data))
             return res.status(400).send({ status: false, msg: "Please Enter some data" })
         if (!isValid(data.title)) {
             return res.status(400).send({ status: false, msg: "Title is Required" })
         }
+        const titleEnum = function(title){
+            return ["Mr","Mrs","Miss"].indexOf(title)!==-1
+        }
+        if(!titleEnum(title)){
+            return res.status(400).send({status:false,msg:"Is not valid title provide Mr,Mrs,Miss"})
+        }
+
         
         if (!isValid(data.name)) {
             return res.status(400).send({ status: false, msg: "Name is Required" })
@@ -42,13 +55,9 @@ const createUserData = async function (req, res) {
                 return res.status(400).send({ status: false, msg: "is not a valid email" })
         if (!isValid(data.email))
             return res.status(400).send({ status: false, msg: "email is required" })
+            
 
-        // let Lowercase = email.toLowerCase()
-        // const filterUser = await UserModel.findOne({ email: Lowercase })
-        // if (!filterUser) {
-        //     return res.status(400).send({ status: false, msg: "no email found" })
-
-        //}
+        
         let alreadyExistEmail = await UserModel.findOne({ email: data.email })
         if (alreadyExistEmail) {
             return res.status(400).send({ status: false, msg: "email already exit" })
@@ -109,7 +118,7 @@ const loginUser = async function (req, res) {
                 }, "Group4", { expiresIn: "5hr" }
 
             );
-            res.status(200).setHeader("x-api-key", token);
+            res.status(200).setHeader("x-auth-token", token);
             return res.status(201).send({ status: "LoggedIn", TOKEN: token });
         }
 
