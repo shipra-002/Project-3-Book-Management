@@ -18,6 +18,7 @@ const isValidObjectId = function (ObjectId) {
     return mongoose.Types.ObjectId.isValid(ObjectId)
 }
 
+//1
 const createReview = async function (req, res) {
     try {
         let data = req.body
@@ -28,7 +29,6 @@ const createReview = async function (req, res) {
             reviewedBy,
             review,
             rating,
-            rating1,
             reviewedAt,
             isDeleted
 
@@ -38,8 +38,7 @@ const createReview = async function (req, res) {
         if (!(bookId == bookId1)) {
             return res.status(400).send({ status: false, msg: "bookId is not matches" })
         }
-        // const verifyId = await reviewModel.find({ bookId: bookId, bookId1: bookId })
-        // if (!isValid(verifyId)) {
+        
         //     return res.status(400).send({ status: false, msg: "its not valid book id" })
         // }
 
@@ -51,25 +50,26 @@ const createReview = async function (req, res) {
         if (!isValid(bookId)) {
             return res.status(400).send({ status: false, msg: "book id require" })
         }
-        if (!(bookId == bookId1)) {
-            return res.status(400).send({ status: false, msg: "bookId is not matches" })
-        }
+        
         if (!isValid(reviewedBy)) {
             return res.status(400).send({ status: false, msg: "reviewedBy require" })
         }
-        // if(!isValid(review)){
-        //     return res.status(400).send({status:false, msg:"review require"})
-        // }
+        
         if (!isValid(rating)) {
             return res.status(400).send({ status: false, msg: "rating require" })
         }
 
-        if (isValid(rating1)) {
-            return res.status(400).send({ status: false, msg: "provide between 1 to 5" })
+        if (!([1, 2, 3, 4, 5].includes(Number(rating)))) {
+            return res.status(400).send({ status: false, msg: "Rating should be from 1,2,3,4,5 this values" })
+
         }
         if (!isValid(reviewedAt)) {
             return res.status(400).send({ status: false, msg: "reviewedAt require" })
         }
+
+        //let Id = req.params.bookId
+
+
         let savedData = await reviewModel.create(data)
         res.status(201).send({ status: true, msg: "succesfully run", data: savedData })
     }
